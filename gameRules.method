@@ -1,6 +1,6 @@
 private static int gameRules 
 {
-	System.out.println("--------------------");
+	System.out.println("------------------------------");
 	System.out.println("Connect Four Game Rules:");
 	System.out.println("In order to win, you must connect four");
 	System.out.println("of your same tokens eiither vertically, ");
@@ -10,10 +10,10 @@ private static int gameRules
 	System.out.println("If you pick an invalid column,");
 	System.out.println("(one that is full or non-existent),");
 	System.out.println("your turn will be skipped.");
-	System.out.println("Lastly, the program will clear");
+	System.out.println("Lastly, the program will clear itsself");
 	System.out.println("as you continue throughout the game");
 	System.out.println("so that your game space does not");
-	System.out.println("become over corwded.");
+	System.out.println("become over crowded.");
 	System.out.println("That's all, enjoy the game!");
-	System.out.println("--------------------");
+	System.out.println("------------------------------");
 }
