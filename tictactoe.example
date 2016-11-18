@@ -1,0 +1,187 @@
+import java.util.Scanner;
+
+
+public class ticTacToe {
+
+    public static Scanner input;
+
+
+    public static void main(String[] args) {
+        input = new Scanner(System.in);
+        char p1 = ' ';
+        char p2 = ' ';
+        boolean gameOver = false;
+        char[][] board = new char[3][3];
+        int pos1 = 0, pos2 = 0;
+
+        // Welcome the user to the game
+        System.out.println("----- Welcome to Tic-Tac-Toe! -----");
+        System.out.println("Would you like to play as x's or o's?");
+        p1 = input.next().charAt(0);
+        System.out.println("Would you like to go first or first?");
+        String first = input.next();
+
+        while (checkLetter(p1) == false) {
+            System.out.println("Invalid input. Please choose either x or o.");
+            p1 = input.next().charAt(0);
+        }
+        p2 = setCompLetter(p1);
+
+        // game loop
+        while (gameOver == false) {
+            // Player 1 turn
+            player1(p1, p2, board);
+            // Check P1 victory
+            if (checkP1Victory(board, p1) == true) {
+                gameOver = true;
+                System.out.println("Player 1 wins");
+                break;
+            }
+            // Player 2 turn
+            player2(p1, p2, board);
+            // Check p2 victory
+            if (checkP2Victory(board, p2) == true) {
+                gameOver = true;
+                System.out.println("Player 2 wins!");
+                break;
+            }
+            // Check for draw
+            if(checkDraw(p1, p2, board) == true){
+                System.out.println("It is a draw!");
+                break;
+            }
+
+        }
+
+    }
+
+    // Checks to see if the user input is valid when they select a letter
+    public static boolean checkLetter(char letter) {
+        if (letter != 'x' && letter != 'o') {
+            return false;
+        }
+        return true;
+    }
+
+    // Sets the computer letter based on the user input
+    public static char setCompLetter(char p1) {
+        if (p1 == 'x') {
+            return 'o';
+        } else {
+            return 'x';
+        }
+
+    }
+
+    // Prints the board to the console
+    public static void printBoard(char[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                System.out.print("[ " + board[i][j] + " ]");
+            }
+            System.out.println();
+        }
+    }
+
+    // Player 1 turn sequence
+    public static void player1(char p1, char p2, char[][] board) {
+        //System.out.println("Player 1 turn.");
+        System.out.println("Enter the position: ");
+        int pos1 = input.nextInt();
+        int pos2 = input.nextInt();
+
+        // Checks to see if the user entered a position that is in bounds
+        while ((pos1 >= 3) || (pos2 >= 3)) {
+            System.out.println("Out of bounds index, re-enter a position");
+            pos1 = input.nextInt();
+            pos2 = input.nextInt();
+        }
+
+        // Checks to see if there is an x or o in the position
+        while ((board[pos1][pos2] == p1) || (board[pos1][pos2] == p2)) {
+            System.out.println("Already something in that position, enter another.");
+            pos1 = input.nextInt();
+            pos2 = input.nextInt();
+        }
+        board[pos1][pos2] = p1;
+        printBoard(board);
+    }
+
+    // Player 2(CPU) sequence
+    public static void player2(char p1, char p2, char[][] board) {
+        int pos1 = (int) (Math.random() * 3);
+        int pos2 = (int) (Math.random() * 3);
+        while ((board[pos1][pos2] == p1) || (board[pos1][pos2] == p2)) {
+                pos1 = (int) (Math.random() * 3);
+                pos2 = (int) (Math.random() * 3);
+            }
+        board[pos1][pos2] = p2;
+        System.out.println("");
+        printBoard(board);
+    }
+    // Checks the p1 victory
+    public static boolean checkP1Victory(char[][] board, char p1) {
+        // Checks player 1 row victory
+        for (int i = 0; i < board.length; i++) {
+            if ((board[i][0] == p1) && (board[i][1] == p1) && (board[i][2] == p1)) {
+                return true;
+            }
+        }
+        // Checks Player 1 verticle victory
+        for (int j = 0; j < board.length; j++) {
+            if ((board[0][j] == p1) && (board[1][j] == p1) && (board[2][j] == p1)) {
+                return true;
+            }
+        }
+        // Checks Player 1 diagonal victory(left to right)
+        if ((board[0][0] == p1) && (board[1][1] == p1) && (board[2][2] == p1)) {
+            return true;
+        }
+        // Checks Player 1 diagonal victory(right to left)
+        if ((board[0][2] == p1) && (board[1][1] == p1) && (board[2][0] == p1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean checkP2Victory(char[][] board, char p2) {
+        // Checks player 2 row victory
+        for (int i = 0; i < board.length; i++) {
+            if ((board[i][0] == p2) && (board[i][1] == p2) && (board[i][2] == p2)) {
+                return true;
+            }
+        }
+        // Checks Player 2 verticle victory
+        for (int j = 0; j < board.length; j++) {
+            if ((board[0][j] == p2) && (board[1][j] == p2) && (board[2][j] == p2)) {
+                return true;
+            }
+        }
+        // Checks Player 2 diagonal victory(left to right)
+        if ((board[0][0] == p2) && (board[1][1] == p2) && (board[2][2] == p2)) {
+            return true;
+        }
+        // Checks Player 2 diagonal victory(right to left)
+        if ((board[0][2] == p2) && (board[1][1] == p2) && (board[2][0] == p2)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static boolean checkDraw(char p1, char p2, char[][] board){
+        int count = 0;
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[i].length; j++){
+                if(board[i][j] == 'x' || board[i][j] == 'o' ){
+                    count++;
+                    if(count == 9){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+}
