@@ -1,6 +1,7 @@
 # connect-four
 connect four clone written in java
 
-Pseuperior Prgrammers inc.
+by: rickroII
 
-example code source: http://codereview.stackexchange.com/questions/100917/connect-four-game-in-java
+briefly collaborated on by:
+Pseuperior Prgrammers inc.
