@@ -2,7 +2,7 @@
 
 
    name:  ConnectFour.java
-   author: Kellen Petersen
+   author: RickRoII
    date: 1/17/16
    description: Connect Four game
 
