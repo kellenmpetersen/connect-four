@@ -1,7 +1,0 @@
-private static boolean checkDigonalBack(char token)
-{
-  if (board[w][h] == token)
-  {
-    (...)
-  }
-}
