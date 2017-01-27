@@ -1,9 +1,9 @@
-   /* 
+/* 
 
 
    name:  ConnectFour.java
-   author: RickRoII
-   date: 1/17/16
+   author: rickroII
+   date: 1/27/16
    description: Connect Four game
 
 
@@ -35,8 +35,7 @@ public class ConnectFour{
 			while (!isInputValid(column));
 			
 			placeToken(column);
-			checkVertical(token, column);
-			checkHorizontal(token, row);
+			win = checkWin(token, row, column);
 			displayBoard();
 			token = switchUser(token);
 		}
@@ -186,6 +185,38 @@ Inputs: token, column, row
 Outputs: none
 returns: boolean
 */
+private static int checkWin(char token, int row, int column){
+	if(checkVertical(token, column)== true){
+		win=1;
+	}
+	else if(checkHorizontal(token, row) == true){
+		win=2;
+	}
+	else if(checkDiagonal(token, row, column) == true){
+		win=3;
+	}
+	else if(checkVertical(token, column) == true && checkHorizontal(token, row) == true){
+		win=4;
+	}
+	else if(checkVertical(token, column) == true && checkDiagonal(token, row, column) == true){
+		win=5;
+	}
+	else if(checkHorizontal(token, row) == true && checkDiagonal(token, row, column) == true){
+		win=6;
+	}
+	else if(checkVertical(token, column) == true && checkHorizontal(token, row) == true && checkDiagonal(token, row, column) == true){
+		win=7;
+	}
+	else{
+		win=0;
+	}
+	
+	System.out.println("win val: "+win);
+	
+	return win;
+	
+}
+
 private static boolean checkVertical(char token, int column){
 	int vertical=0;
 	for(int height=0; height < HEIGHT; height++){
@@ -198,7 +229,6 @@ private static boolean checkVertical(char token, int column){
 				}
 		}
 		else{
-			System.out.println("DEBUG: "+height);
 			vertical=0;
 		}
 	}
@@ -219,13 +249,36 @@ private static boolean checkHorizontal(char token, int row){
 			}
 		}
 		else{
-			System.out.println("DEBUG: "+width);
 			horizontal=0;
 		}
 	}
 	
 	return false;
 	
+}
+
+private static boolean checkDiagonal(char token, int row, int column){
+	int diagonal=0;
+	for(int extra = 0; extra < HEIGHT; extra++){
+		for(int height = 0; height < HEIGHT; height++){
+			for(int width = 0; width < WIDTH; width++){
+				if((width+extra)==height && board[width][height]==token){
+					diagonal++;
+				}
+				else if((height+extra)== width && board[width][height]==token){
+					diagonal++;
+				}
+				else if((height+extra)== width || (width+extra)==height && board[width][height]!=token){
+					diagonal = 0;
+				}
+				else if(diagonal >= 4){
+					return true;
+				}
+			}
+		}
+	}
+	
+	return false;
 }
 
 /*	
