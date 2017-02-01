@@ -2,40 +2,45 @@
 
 
    name:  ConnectFour.java
-   author: rickroII
+   author: Kellen Petersen
    date: 1/27/16
    description: Connect Four game
+   
+   decided to upload later as a .txt file just in case
 
 
 */
 
 import java.util.Scanner;
+import java.lang.Math.*;
 
 public class ConnectFour{
 
-	private final static int WIDTH = 6, HEIGHT = 7;
-	private final static int MAX_COLUMN = HEIGHT, MIN_COLUMN = 1;
+	private final static int WIDTH = 7, HEIGHT = 6;
+	private final static int MAX_HEIGHT = HEIGHT-1, MIN_COLUMN = 1;
 	private final static char BLANK = '.';
-	
 	private final static int ERROR = -1;
+	
+	private static String winMessage = null;
 	
 	private static int row = 0, column = 0;
 	private static char token='x';  
-	private static int win = 0, turn = 1;
+	private static int turn = 1;
 
 	public static char[][]board = new char[WIDTH][HEIGHT];
 
 	public static void main(String[] args){
 		clearBoard();
 		displayRules();
-		while (!isBoardFull() && !isWinner(win)){
+		while (!isBoardFull() && !isWinner(token, winMessage)){
+		System.out.println("\n"+token+"'s turn");
+		
 			do{
 				userInput();
 			} 
-			while (!isInputValid(column));
-			
-			placeToken(column);
-			win = checkWin(token, row, column);
+			while (!placeToken(column));
+
+			winMessage = checkWin(token, row, column);
 			displayBoard();
 			token = switchUser(token);
 		}
@@ -64,8 +69,8 @@ returns: none
 */
 
 private static void displayRules(){
-	System.out.println("Connect4 Game Rules can be found online");
-	System.out.println("Use an internet browser to find 'Connect Four Game Rules'");
+	System.out.println("Connect4 game rules can be found online");
+	System.out.println("Use an internet browser to look up 'Connect Four Game Rules'");
 }
 
 /*	
@@ -94,30 +99,13 @@ Outputs: none
 returns: boolean (if true, there is a winner)
 */
 
-private static boolean isWinner(int win){
-	if(win == 0){
+private static boolean isWinner(char token, String winMessage){
+	if(winMessage == null){
 		return false;
 	}
 	else{
+		System.out.println("\n"+token+" won the game ("+winMessage+")!");
 		return true;
-	}
-}
-
-/*	
-Purpose: Checks if the input is valid (inside columns and rows)
-	DOES NOT check if user overwrites other player's token
-Inputs: column and row of players choice
-Outputs: none
-returns: boolean (if true, the input is valid)
-*/
-
-private static boolean isInputValid(int column){
-	//fix THIS
-	if(column < MAX_COLUMN){
-		return true;
-	}
-	else{
-		return false;
 	}
 }
 
@@ -134,7 +122,7 @@ private static int userInput(){
 		
 	Scanner input = new Scanner(System.in);
 		
-	System.out.println("\nEnter a column (1-6)");
+	System.out.println("\nEnter a column (1-7)");
 	
 	while(flag == false){
 		while (!input.hasNextInt()) {
@@ -145,13 +133,12 @@ private static int userInput(){
 			
 			response = input.nextInt()- MIN_COLUMN;
 			
-			if (response < WIDTH && response >= 0){
+			if (response < WIDTH+1 && response >= 0){
 				column = response;
-				System.out.println("column: "+column);
 				flag = true;
 			}
 			else  {
-				System.out.println("Not a valid column, try (1-6)");
+				System.out.println("Not a valid column, try (1-7)");
 				flag = false;
 			}
 		}
@@ -162,21 +149,23 @@ private static int userInput(){
 Purpose: places users token in the column of their choice
 Inputs: column of players choice
 Outputs: none
-returns: int (row)
+returns: boolean
 */
 
-private static int placeToken(int column){
+private static boolean placeToken(int column){
 	for(int height=0; height < HEIGHT; height++){
-		if(board[column][height]==BLANK){
+		if(board[column][MAX_HEIGHT]!= BLANK){
+			System.out.println("That column is full! Please select another one.");
+			return false;
+		}
+		else if (board[column][height]==BLANK){
 			board[column][height] = token;
-			row = height;
-			System.out.println("placeToken method");
-			System.out.println("column:" + column);
-			System.out.println("row: "+row);
-			return row;
+			return true;
 		}
 	}
-	return ERROR;
+
+	return false;
+	
 }
 
 /*	
@@ -185,35 +174,33 @@ Inputs: token, column, row
 Outputs: none
 returns: boolean
 */
-private static int checkWin(char token, int row, int column){
+private static String checkWin(char token, int row, int column){
 	if(checkVertical(token, column)== true){
-		win=1;
+		winMessage = "on a vertical";
 	}
 	else if(checkHorizontal(token, row) == true){
-		win=2;
+		winMessage = "on a horizontal";
 	}
 	else if(checkDiagonal(token, row, column) == true){
-		win=3;
+		winMessage="on a diagonal";
 	}
 	else if(checkVertical(token, column) == true && checkHorizontal(token, row) == true){
-		win=4;
+		winMessage="on a vertical & a horizontal";
 	}
 	else if(checkVertical(token, column) == true && checkDiagonal(token, row, column) == true){
-		win=5;
+		winMessage="on a vertical & a diagonal";
 	}
 	else if(checkHorizontal(token, row) == true && checkDiagonal(token, row, column) == true){
-		win=6;
+		winMessage="on a horizontal & a diagonal";	
 	}
 	else if(checkVertical(token, column) == true && checkHorizontal(token, row) == true && checkDiagonal(token, row, column) == true){
-		win=7;
+		winMessage="on a vertical & a horizontal & a diagonal (OH BABY A TRIPLE! OH YEAH!)";
 	}
 	else{
-		win=0;
+		winMessage=null;
 	}
 	
-	System.out.println("win val: "+win);
-	
-	return win;
+	return winMessage;
 	
 }
 
@@ -222,11 +209,9 @@ private static boolean checkVertical(char token, int column){
 	for(int height=0; height < HEIGHT; height++){
 		if(board[column][height]==token){
 			vertical++;
-			System.out.println("Vertical: "+vertical);
-				if(vertical>=4){
-					System.out.println("Vertical Win encountered!");
-					return true;
-				}
+			if(vertical>=4){
+				return true;
+			}
 		}
 		else{
 			vertical=0;
@@ -242,9 +227,7 @@ private static boolean checkHorizontal(char token, int row){
 	for(int width=0; width < WIDTH; width++){
 		if(board[width][row]==token){
 			horizontal++;
-			System.out.println("Horizontal: "+horizontal);
 			if(horizontal>=4){
-				System.out.println("Horizontal Win encountered!");
 				return true;
 			}
 		}
@@ -258,11 +241,16 @@ private static boolean checkHorizontal(char token, int row){
 }
 
 private static boolean checkDiagonal(char token, int row, int column){
-	int diagonal=0;
+	int diagonal=0, antidiagonal=0;
+
 	for(int extra = 0; extra < HEIGHT; extra++){
 		for(int height = 0; height < HEIGHT; height++){
+			//normal diagonal
 			for(int width = 0; width < WIDTH; width++){
-				if((width+extra)==height && board[width][height]==token){
+				if(diagonal >= 4){
+					return true;
+				}
+				else if((width+extra)==height && board[width][height]==token){
 					diagonal++;
 				}
 				else if((height+extra)== width && board[width][height]==token){
@@ -271,12 +259,31 @@ private static boolean checkDiagonal(char token, int row, int column){
 				else if((height+extra)== width || (width+extra)==height && board[width][height]!=token){
 					diagonal = 0;
 				}
-				else if(diagonal >= 4){
-					return true;
-				}
 			}
 		}
 	}
+
+	for(int height = 0; height < HEIGHT; height++){
+		//anti-diagonal
+		for(int width = WIDTH-1; width >= 0; width--){
+			int difference = 0;
+			int metacount = 0;
+
+			difference = width - height;
+			metacount = Math.abs(difference);
+
+				if(antidiagonal >= 4){
+					return true;
+				}
+				else if((metacount%2)==0 && board[width][height]==token){
+					antidiagonal++;
+					height++;
+				}
+				else if((metacount%2)!=0 && board[width][height]==token){
+					antidiagonal = 0;
+				}
+			}
+		}
 	
 	return false;
 }
@@ -303,13 +310,19 @@ Outputs: current user
 returns: char (token)
 */
 private static char switchUser(char token){
-	turn++;
-	if(turn%2 == 1){
-		token='x';
-		return token;
+	if(winMessage==null){
+		turn++;
+		if(turn%2 == 1){
+			token='x';
+			return token;
+		}
+		else{
+			token='o';
+			return token;
+		}
 	}
 	else{
-		token='o';
+		//return's current token if they've won the game
 		return token;
 	}
 }
