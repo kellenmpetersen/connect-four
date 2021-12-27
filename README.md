@@ -1,10 +1,8 @@
 # connect-four
-connect four clone written in java
+Command Line Two-Player Connect Four
 
-by: rickroII
+Author: Kellen Petersen
 
-history:
-
-started out as a group project briefly collaborated on by Pseuperior Prgrammers inc.
-then it became the final project for school (semester 1 of intro to programming 101)
-now it's a personal project maintained to create the perfect connect-four.java program
+Started out as a group project briefly collaborated on by Pseuperior Prgrammers Inc.
+Then it became the final project for semester 1 of Introduction to Programming.
+Now its a personal project updated to highlight my improvement in Java and coding best practices.
